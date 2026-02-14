@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hi Chakku 💖</title>
+  <style>
+    :root{
+      --bg:#fff5f7; --card:#ffffff; --text:#111827; --muted:rgba(17,24,39,.72);
+      --pink:#fb7185; --pink2:#ffe4e6; --shadow:0 14px 40px rgba(0,0,0,.10);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background: radial-gradient(circle at 15% 10%, #ffe4e6 0 16%, transparent 17%),
+                  radial-gradient(circle at 90% 12%, #ffd1dc 0 14%, transparent 15%),
+                  radial-gradient(circle at 20% 90%, #ffd6e7 0 16%, transparent 17%),
+                  var(--bg);
+      color:var(--text); overflow-x:hidden;
+    }
+    .wrap{max-width:920px;margin:0 auto;padding:26px}
+    .card{background:var(--card);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);overflow:hidden}
+    header{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    h1{margin:0;font-size:2rem;letter-spacing:-.02em}
+    .sub{margin:6px 0 0;color:var(--muted)}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 12px;border-radius:999px;background:#fff1f2;
+      border:1px solid rgba(0,0,0,.06);font-weight:700;
+    }
+    .gifRow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}
+    .gif{width:min(360px,100%);border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.08);border:1px solid rgba(0,0,0,.06)}
+    .q{margin:18px 0 10px;font-size:1.25rem;line-height:1.25;min-height:2.6em}
+    .btnArea{position:relative;padding-top:6px}
+    .btns{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    button{
+      border:0;border-radius:999px;padding:12px 16px;font-weight:800;cursor:pointer;
+      transition:transform .12s ease, filter .12s ease; user-select:none;
+    }
+    button:hover{transform:translateY(-1px);filter:brightness(1.02)}
+    button:active{transform:translateY(1px) scale(.99)}
+    .primary{background:var(--pink);color:#fff}
+    .ghost{background:var(--pink2);color:var(--text)}
+    .response{
+      margin-top:14px;background:#fff1f2;border:1px solid rgba(0,0,0,.06);
+      padding:12px 14px;border-radius:14px;display:none
+    }
+    .metaRow{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+    .progressWrap{flex:1;min-width:220px;background:rgba(0,0,0,.06);height:10px;border-radius:999px;overflow:hidden}
+    .bar{height:100%;width:0%;background:var(--pink);border-radius:999px;transition:width .25s ease}
+    .tiny{color:var(--muted);font-size:.95rem}
+
+    /* floating hearts */
+    .heart{
+      position:fixed;left:50%;top:105%;font-size:18px;opacity:.9;pointer-events:none;
+      animation:floatUp linear forwards;filter:drop-shadow(0 6px 10px rgba(0,0,0,.12));
+    }
+    @keyframes floatUp{
+      from{transform:translate(-50%,0) scale(1)}
+      to{transform:translate(calc(-50% + var(--drift)),calc(-120vh)) scale(var(--scale));opacity:0}
+    }
+    /* wiggle on "No" */
+    .nope{animation:wiggle .7s ease-in-out infinite}
+    @keyframes wiggle{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+    .footer{margin-top:16px;color:var(--muted);font-size:.92rem}
+    code{background:rgba(0,0,0,.04);padding:2px 6px;border-radius:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <div>
+          <h1>Hi Chakku 💖</h1>
+          <p class="sub">A very serious questionnaire (it’s not serious). 🫶</p>
+        </div>
+        <div class="pill" id="statusPill">💌 Loading romance.exe…</div>
+      </header>
+
+      <div class="gifRow">
+        <img class="gif" id="topGif" alt="cute valentine gif" />
+        <span class="pill" id="jokePill">🙂 If you smile, you owe me a hug.</span>
+      </div>
+
+      <div id="question" class="q"></div>
+
+      <div class="btnArea">
+        <div class="btns" id="buttons"></div>
+      </div>
+
+      <div class="response" id="responseBox"></div>
+
+      <div class="metaRow">
+        <div class="progressWrap"><div class="bar" id="bar"></div></div>
+        <div class="tiny" id="progressText"></div>
+      </div>
+
+      <div class="footer">
+        This site is public. No personal photos ✅. Edit questions inside <code>steps</code>.
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Cute GIFs (HTTPS). Swap any link here if you want different ones.
+  const gifs = [
+    "https://media.giphy.com/media/56y5JGqQPhfcQ/giphy.gif",
+    "https://media.giphy.com/media/Gpqk76tiVKjn2/giphy.gif",
+    "https://media.giphy.com/media/3CCXHZWV6F6O9VQ7FL/giphy.gif",
+    "https://media.giphy.com/media/6KmLHrQhAeH5fC0ZT1/giphy.gif"
+  ];
+
+  const steps = [
+    {
+      q: "How obsessed with me are you today? 😌",
+      choices: ["Normal amount 😇", "Concerning amount 😳", "Legally actionable 😭", "Yes."],
+      gifIndex: 2,
+      reply: (c) => `You chose: "${c}". Great. This will be used as evidence. ✅`
+    },
+    {
+      q: "Choose our vibe right now:",
+      choices: ["Cute & calm 🌸", "Chaotic gremlins 🧌", "Romcom main characters 🎬", "Sleep by 9pm 😴"],
+      gifIndex: 3,
+      reply: (c) => `Perfect: "${c}". I approve (and I’m always right).`
+    },
+    {
+      q: "Pick your current mood (be honest 😌):",
+      choices: ["Angel 😇", "Menace 😈", "Sleepy 🥱", "All of the above (correct)"],
+      gifIndex: 1,
+      reply: (c) => `Diagnosis: ${c}. Prescription: 1 hug + 2 kisses + no leaving.`
+    },
+    {
+      q: "If I appear at your door with snacks, you will…",
+      choices: ["Scream (happy) 😭", "Pretend to be cool 😎", "Eat immediately 🍫", "Marry me on the spot 💍"],
+      gifIndex: 0,
+      reply: (c) => `Noted: "${c}". I will hold you to it.`
+    },
+    {
+      q: "Select the correct statement:",
+      choices: ["You’re cute", "I’m cute", "We’re cute", "All of the above ✅"],
+      gifIndex: 2,
+      reply: (c) => `Correct. "${c}" was the only acceptable answer.`
+    },
+    {
+      q: "Final boss question: will you be my Valentine? 💖",
+      choices: ["YES 💖", "Absolutely YES 💘", "YES!!! 😭", "I thought you’d never ask 💞", "No 😒"],
+      gifIndex: 0,
+      reply: (c) => `✅ Valentine confirmed. (${c}) Now send me a screenshot as proof. 😌💞`
+    }
+  ];
+
+  const extraLines = [
+    "🧾 This will be referenced in future arguments (joking!!).",
+    "📌 Noted with extreme seriousness.",
+    "🚨 The Romance Police approve.",
+    "🫶 You’re stuck with me now (affectionately).",
+    "🤨 Interesting choice… I respect it (barely).",
+    "🧠 I will remember this forever. Probably."
+  ];
+
+  const statusLines = [
+    "💌 Relationship status: loading…",
+    "💘 Cupid is watching.",
+    "🍫 Payment accepted in chocolate.",
+    "🫶 Consent to cuteness: accepted.",
+    "💞 Vibes: dangerously romantic."
+  ];
+
+  const questionEl = document.getElementById("question");
+  const buttonsEl  = document.getElementById("buttons");
+  const responseBox= document.getElementById("responseBox");
+  const barEl      = document.getElementById("bar");
+  const progressEl = document.getElementById("progressText");
+  const topGifEl   = document.getElementById("topGif");
+  const statusPill = document.getElementById("statusPill");
+  const jokePill   = document.getElementById("jokePill");
+
+  let i = 0;
+
+  function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function typewriter(text, el, speed=14){
+    el.textContent = "";
+    let idx = 0;
+    const t = setInterval(() => {
+      el.textContent += text[idx++];
+      if (idx >= text.length) clearInterval(t);
+    }, speed);
+  }
+
+  function setTopGif(step){
+    topGifEl.src = gifs[step.gifIndex ?? 0] || gifs[0];
+    topGifEl.loading = "lazy";
+  }
+
+  function setProgress(){
+    const pct = Math.round((i / steps.length) * 100);
+    barEl.style.width = `${pct}%`;
+    progressEl.textContent = `Question ${i+1} of ${steps.length}`;
+  }
+
+  function spawnHearts(n=6){
+    const emojis = ["💖","💘","💝","💗","💓","💞","🫶","✨","🌸"];
+    for(let k=0;k<n;k++){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      h.style.left = `${Math.random()*100}%`;
+      h.style.setProperty("--drift", `${(Math.random()*240 - 120)}px`);
+      h.style.setProperty("--scale", `${(Math.random()*0.8 + 0.7)}`);
+      const dur = Math.random()*2.2 + 2.2;
+      h.style.animationDuration = `${dur}s`;
+      h.style.fontSize = `${Math.floor(Math.random()*14 + 14)}px`;
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), dur*1000);
+    }
+  }
+
+  function render(){
+    const step = steps[i];
+    setTopGif(step);
+    statusPill.textContent = rand(statusLines);
+    jokePill.textContent = rand(extraLines);
+
+    buttonsEl.innerHTML = "";
+    responseBox.style.display = "none";
+
+    typewriter(step.q, questionEl, 14);
+    setProgress();
+    spawnHearts(3);
+
+    step.choices.forEach((c, idx) => {
+      const b = document.createElement("button");
+      b.textContent = c;
+      b.className = idx === 0 ? "primary" : "ghost";
+
+      const isNo = c.toLowerCase().includes("no");
+
+      if (isNo) {
+        b.classList.add("nope");
+        b.title = "Nice try 😌";
+
+        const dodge = () => {
+          const dx = Math.floor(Math.random()*240) - 120;
+          const dy = Math.floor(Math.random()*80) - 40;
+          b.style.transform = `translate(${dx}px, ${dy}px) rotate(${(Math.random()*12)-6}deg)`;
+        };
+
+        b.onmouseenter = dodge;
+        b.ontouchstart = (e) => { e.preventDefault(); dodge(); };
+
+        // If they somehow click it:
+        b.onclick = () => choose("YES 💖 (the No button panicked)");
+      } else {
+        b.onclick = () => choose(c);
+      }
+
+      buttonsEl.appendChild(b);
+    });
+  }
+
+  function choose(choice){
+    const step = steps[i];
+    const msg = step.reply ? step.reply(choice) : `Aww: ${choice}`;
+    responseBox.textContent = msg + " " + rand(extraLines);
+    responseBox.style.display = "block";
+
+    buttonsEl.innerHTML = "";
+
+    if (i > 0) {
+      const back = document.createElement("button");
+      back.textContent = "← Back";
+      back.className = "ghost";
+      back.onclick = () => { i--; render(); };
+      buttonsEl.appendChild(back);
+    }
+
+    const next = document.createElement("button");
+    const last = (i === steps.length - 1);
+    next.textContent = last ? "Restart ↺" : "Next →";
+    next.className = "primary";
+    next.onclick = () => {
+      if (last) { i = 0; barEl.style.width = "0%"; render(); }
+      else { i++; render(); }
+    };
+    buttonsEl.appendChild(next);
+
+    barEl.style.width = `${Math.round(((i+1)/steps.length)*100)}%`;
+    spawnHearts(last ? 18 : 8);
+    if (last) statusPill.textContent = "✅ Valentine accepted. No refunds. 💞";
+  }
+
+  render();
+</script>
+</body>
+</html>
