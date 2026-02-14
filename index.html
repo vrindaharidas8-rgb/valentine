@@ -6,27 +6,41 @@
   <title>Hi Chakku 💖</title>
   <style>
     :root{
-      --bg:#fff5f7; --card:#ffffff; --text:#111827; --muted:rgba(17,24,39,.72);
-      --pink:#fb7185; --pink2:#ffe4e6; --shadow:0 14px 40px rgba(0,0,0,.10);
-      --radius:18px;
+      --bg:#f1fbff;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:rgba(15,23,42,.68);
+      --pink:#14b8a6;      /* teal */
+      --pink2:#ffe4d6;     /* peach */
+      --shadow:0 16px 45px rgba(2, 44, 54, .10);
+      --radius:22px;
     }
     *{box-sizing:border-box}
     body{
       margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      background: radial-gradient(circle at 15% 10%, #ffe4e6 0 16%, transparent 17%),
-                  radial-gradient(circle at 90% 12%, #ffd1dc 0 14%, transparent 15%),
-                  radial-gradient(circle at 20% 90%, #ffd6e7 0 16%, transparent 17%),
-                  var(--bg);
+      background:
+        radial-gradient(circle at 12% 12%, #ccfbf1 0 18%, transparent 19%),
+        radial-gradient(circle at 88% 14%, #ffe4d6 0 16%, transparent 17%),
+        radial-gradient(circle at 18% 88%, #bae6fd 0 18%, transparent 19%),
+        radial-gradient(circle at 86% 84%, #fecaca 0 14%, transparent 15%),
+        var(--bg);
       color:var(--text); overflow-x:hidden;
     }
     .wrap{max-width:980px;margin:0 auto;padding:26px}
-    .card{background:var(--card);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);overflow:hidden}
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:26px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      border: 1px solid rgba(0,0,0,.06);
+    }
     header{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
     h1{margin:0;font-size:2rem;letter-spacing:-.02em}
     .sub{margin:6px 0 0;color:var(--muted)}
     .pill{
       display:inline-flex;align-items:center;gap:8px;
-      padding:10px 12px;border-radius:999px;background:#fff1f2;
+      padding:10px 12px;border-radius:999px;background:rgba(20,184,166,.10);
       border:1px solid rgba(0,0,0,.06);font-weight:900;
     }
     .gifRow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}
@@ -44,8 +58,20 @@
     .primary{background:var(--pink);color:#fff}
     .ghost{background:var(--pink2);color:var(--text)}
     .response{
-      margin-top:14px;background:#fff1f2;border:1px solid rgba(0,0,0,.06);
+      margin-top:14px;
+      background: rgba(20,184,166,.10);
+      border:1px solid rgba(0,0,0,.06);
       padding:12px 14px;border-radius:14px;display:none
+    }
+    .endNote{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:16px;
+      border:1px solid rgba(0,0,0,.06);
+      background: rgba(255,228,214,.55);
+      font-weight:900;
+      font-size:1.15rem;
+      display:none;
     }
     .metaRow{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
     .progressWrap{flex:1;min-width:220px;background:rgba(0,0,0,.06);height:10px;border-radius:999px;overflow:hidden}
@@ -73,7 +99,7 @@
       75%{transform:translateX(4px)}
     }
 
-    /* quick pop for response box */
+    /* quick pop */
     .pop{ animation: pop .18s ease-out 1; }
     @keyframes pop{
       from{ transform: scale(.98); opacity: .6; }
@@ -120,6 +146,9 @@
         </div>
       </div>
 
+      <!-- FINAL LOVE MESSAGE -->
+      <div class="endNote" id="endNote">I love you so much Chakku 💖</div>
+
       <div class="metaRow">
         <div class="progressWrap"><div class="bar" id="bar"></div></div>
         <div class="tiny" id="progressText"></div>
@@ -132,7 +161,6 @@
   </div>
 
 <script>
-  // GIFs (HTTPS). Change these if you want.
   const gifs = [
     "https://media.giphy.com/media/56y5JGqQPhfcQ/giphy.gif",
     "https://media.giphy.com/media/Gpqk76tiVKjn2/giphy.gif",
@@ -140,7 +168,6 @@
     "https://media.giphy.com/media/6KmLHrQhAeH5fC0ZT1/giphy.gif"
   ];
 
-  // Extra punchlines sprinkled everywhere
   const extraLines = [
     "🧾 This will be used in future debates (lovingly).",
     "📌 Screenshotting your answer mentally.",
@@ -150,7 +177,6 @@
     "🧠 I’ll remember this forever. Or until snacks."
   ];
 
-  // The pill at the top changes based on how chaotic the answers are
   const statusByChaos = [
     "💌 Booting up Cupid OS…",
     "💘 Vibes detected.",
@@ -159,7 +185,6 @@
     "🧨 CHAOS MODE: enabled."
   ];
 
-  // Tiny joke pill lines
   const jokePills = [
     "🫣 I made this instead of being normal.",
     "🍫 Payment accepted in chocolates only.",
@@ -168,7 +193,6 @@
     "🧿 Nazar-proofing our vibes."
   ];
 
-  // Each choice can have a unique reaction (this is the fun part)
   const steps = [
     {
       q: "How obsessed with me are you today? 😌",
@@ -191,11 +215,11 @@
       ],
       onPick: (choiceText) => {
         if (choiceText.includes("Sleepy")) {
-          spawnHearts(12, ["🥱","🛌","💤","🫶","💖"]);
+          spawnHearts(12, ["🥱","🛌","💤","🫶"]);
           return "💤 Initiating cuddle.exe… loading…";
         }
         if (choiceText.includes("Menace")) {
-          spawnHearts(10, ["😈","🔥","💘","💞","🫶"]);
+          spawnHearts(10, ["😈","🔥","💘","🫶"]);
           return "😈 Menace mode accepted. Deploying ‘hold hands aggressively’ protocol.";
         }
         return null;
@@ -221,6 +245,67 @@
         { t:"All of them. Repeatedly.", chaos:4, r:"Understood. Compliments will arrive violently." }
       ]
     },
+
+    {
+      q: "What best describes me? (choose carefully 😌)",
+      gifIndex: 2,
+      choices: [
+        { t:"A literal angel 😇", chaos:2, r:"Correct. Heavenly behaviour (most of the time)." },
+        { t:"A cute menace 🐒", chaos:4, r:"Menace?? wow. Accurate. I accept." },
+        { t:"Soft baby ✨", chaos:3, r:"Soft baby confirmed. Handle with hugs only." },
+        { t:"Sleepyhead royalty 🥱👑", chaos:4, r:"Correct. Your throne is the bed and your kingdom is naps." }
+      ],
+      onPick: (choiceText) => {
+        if (choiceText.includes("angel")) {
+          spawnHearts(10, ["😇","✨","🫶"]);
+          return "😇 Halo installed successfully.";
+        }
+        if (choiceText.includes("menace")) {
+          spawnHearts(12, ["🐒","😈","🔥","💘"]);
+          return "🐒 Chaos detected. I love it here.";
+        }
+        if (choiceText.includes("Soft")) {
+          spawnHearts(12, ["🥹","🧸","🫶"]);
+          return "🧸 Warning: may randomly demand cuddles.";
+        }
+        if (choiceText.includes("Sleepyhead")) {
+          spawnHearts(12, ["🥱","💤","🛌","👑","🫶"]);
+          return "👑 All hail the nap queen/king. Bedtime is now law.";
+        }
+        return null;
+      }
+    },
+
+    {
+      q: "Pick my most dangerous habit:",
+      gifIndex: 3,
+      choices: [
+        { t:"Stealing your attention 24/7 👀", chaos:4, r:"Guilty. Your attention is my favourite snack." },
+        { t:"Being too cute to argue with 🥹", chaos:3, r:"Unfair advantage? Yes. Will I stop? No." },
+        { t:"Overthinking… then pretending I’m chill 😌", chaos:2, r:"I’m calm. (I am not calm.)" },
+        { t:"Missing you even when you’re literally here 🤝", chaos:4, r:"Clinginess is my love language. Don’t judge me." }
+      ],
+      onPick: (choiceText) => {
+        if (choiceText.includes("attention")) {
+          spawnHearts(10, ["👀","💘","🫶"]);
+          return "👀 Looking at you respectfully (lying).";
+        }
+        if (choiceText.includes("cute")) {
+          spawnHearts(12, ["🥹","💞","🫶","✨"]);
+          return "🥹 Court rules: cuteness wins by default.";
+        }
+        if (choiceText.includes("Overthinking")) {
+          spawnHearts(10, ["🧠","😌","🫶"]);
+          return "🧠 Brain: 100 tabs open.";
+        }
+        if (choiceText.includes("Missing you")) {
+          spawnHearts(12, ["🤝","💞","💘","🫶"]);
+          return "🤝 Come here. Closer. Closer.";
+        }
+        return null;
+      }
+    },
+
     {
       q: "Final boss question: will you be my Valentine? 💖",
       gifIndex: 0,
@@ -234,7 +319,6 @@
     }
   ];
 
-  // Elements
   const questionEl = document.getElementById("question");
   const buttonsEl  = document.getElementById("buttons");
   const responseBox= document.getElementById("responseBox");
@@ -243,6 +327,7 @@
   const topGifEl   = document.getElementById("topGif");
   const statusPill = document.getElementById("statusPill");
   const jokePill   = document.getElementById("jokePill");
+  const endNote    = document.getElementById("endNote");
 
   // Kiss game elements
   const kissGame = document.getElementById("kissGame");
@@ -327,14 +412,11 @@
   function dodgeKiss(){
     const area = kissGame.querySelector(".btns");
     const rect = area.getBoundingClientRect();
-
     const maxX = Math.max(0, rect.width - kissBtn.offsetWidth);
     const maxY = Math.max(0, rect.height - kissBtn.offsetHeight);
-
     const x = Math.floor(Math.random() * (maxX + 1));
     const y = Math.floor(Math.random() * (maxY + 1));
     const scale = (Math.random() * 0.25) + 0.95;
-
     kissBtn.style.left = x + "px";
     kissBtn.style.top  = y + "px";
     kissBtn.style.transform = `scale(${scale})`;
@@ -348,7 +430,6 @@
     kisses++;
     spawnHearts(14, ["💋","💖","💘","🫶","✨"]);
     kissBox.textContent = `💋 Kiss stolen! Total kisses: ${kisses}.`;
-
     if (kisses >= 3) {
       kissBox.textContent = "✅ 3 kisses stolen. You win. Congratulations, you are adorable.";
       spawnHearts(24, ["💋","💖","💘","💝","🫶","✨"]);
@@ -367,31 +448,25 @@
   function makeNoRunAway(btn){
     btn.classList.add("noFloat");
     btn.title = "Nice try 😌";
-
     let running = false;
     const flyAway = () => {
       if (running) return;
       running = true;
-
       const dx = Math.floor(Math.random()*360) - 180;
       const dy = - (Math.floor(Math.random()*180) + 120);
       const scale = (Math.random()*0.7 + 1.6);
       const rot = (Math.random()*30 - 15);
-
       btn.classList.add("runaway");
       btn.style.transform = `translate(${dx}px, ${dy}px) scale(${scale}) rotate(${rot}deg)`;
-      spawnHearts(8, ["😌","💨","💖","🫶","✨"]);
-
+      spawnHearts(8, ["😌","💨","🫶","✨"]);
       setTimeout(() => {
         btn.style.transform = "translate(0,0) scale(1) rotate(0deg)";
         btn.classList.remove("runaway");
         running = false;
       }, 520);
     };
-
     btn.onmouseenter = flyAway;
     btn.ontouchstart = (e) => { e.preventDefault(); flyAway(); };
-
     btn.onclick = (e) => {
       e.preventDefault();
       btn.classList.add("shake");
@@ -409,6 +484,7 @@
     buttonsEl.innerHTML = "";
     responseBox.style.display = "none";
     hideKissGame();
+    endNote.style.display = "none";
 
     typewriter(step.q, questionEl, 14);
     setProgress();
@@ -418,13 +494,8 @@
       const b = document.createElement("button");
       b.textContent = choiceObj.t;
       b.className = idx === 0 ? "primary" : "ghost";
-
-      if (choiceObj.isNo) {
-        makeNoRunAway(b);
-      } else {
-        b.onclick = () => choose(choiceObj);
-      }
-
+      if (choiceObj.isNo) makeNoRunAway(b);
+      else b.onclick = () => choose(choiceObj);
       buttonsEl.appendChild(b);
     });
   }
@@ -437,21 +508,17 @@
     const extra = rand(extraLines);
 
     let bonus = null;
-    if (typeof step.onPick === "function") {
-      bonus = step.onPick(choiceObj.t);
-    }
+    if (typeof step.onPick === "function") bonus = step.onPick(choiceObj.t);
 
     showResponse(base + " " + extra + (bonus ? (" " + bonus) : ""));
     setStatus();
 
-    // Trigger kiss mini-game on certain cute answers
     if (choiceObj.t.includes("YES") || choiceObj.t.toLowerCase().includes("cling") || choiceObj.t.includes("All of them")) {
       showKissGame();
     } else {
       hideKissGame();
     }
 
-    // Replace buttons with Back/Next
     buttonsEl.innerHTML = "";
 
     if (i > 0) {
@@ -478,6 +545,11 @@
     if (last) {
       statusPill.textContent = "✅ Valentine accepted. No refunds. 💞";
       jokePill.textContent = "📸 Send a screenshot as proof. (Mandatory.)";
+      endNote.style.display = "block";
+      endNote.classList.remove("pop");
+      void endNote.offsetWidth;
+      endNote.classList.add("pop");
+      spawnHearts(26, ["💖","💋","🫶","✨","💘"]);
     }
   }
 
